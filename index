@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drie-Kolommenmodel | Dilemma Analyse</title>
+
+<style>
+
+:root{
+    --politieblauw:#003087;
+    --achtergrond:#F4F4F4; /* RAL 9010 benadering */
+}
+
+body{
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color:var(--achtergrond);
+    color:var(--politieblauw);
+}
+
+header{
+    background:var(--politieblauw);
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0;
+    font-size:24px;
+}
+
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.step{
+    margin-bottom:35px;
+}
+
+.step h2{
+    border-left:6px solid var(--politieblauw);
+    padding-left:10px;
+    margin-bottom:15px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+textarea{
+    width:100%;
+    min-height:120px;
+    padding:12px;
+    border-radius:8px;
+    border:2px solid var(--politieblauw);
+    font-size:14px;
+    color:var(--politieblauw);
+    resize:vertical;
+}
+
+.columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.button-group{
+    text-align:center;
+    margin-top:30px;
+}
+
+button{
+    background:var(--politieblauw);
+    color:white;
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    font-size:14px;
+    cursor:pointer;
+    margin:5px;
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+footer{
+    text-align:center;
+    font-size:12px;
+    margin-top:40px;
+    opacity:0.6;
+}
+
+@media(max-width:768px){
+    .columns{
+        grid-template-columns:1fr;
+    }
+}
+
+@media print{
+    button, footer{
+        display:none;
+    }
+    body{
+        background:white;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Drie-Kolommenmodel – Dilemma Analyse</h1>
+    <p>Onderzoek zorgvuldig welke waarden botsen en maak een bewuste keuze.</p>
+</header>
+
+<div class="container">
+
+    <div class="step">
+        <h2>Stap 1 – Beschrijf het dilemma</h2>
+        <div class="card">
+            <textarea id="dilemma" placeholder="Wat is er precies aan de hand? Welke keuze moet worden gemaakt?"></textarea>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Stap 2 – Wie zijn betrokken?</h2>
+        <div class="card">
+            <textarea id="betrokkenen" placeholder="Wie hebben met deze situatie te maken? Direct en indirect?"></textarea>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Stap 3 – Argumenten afwegen</h2>
+        <div class="columns">
+            <div class="card">
+                <h3>Argumenten vóór keuze A</h3>
+                <textarea id="voor" placeholder="Waarom zou je hiervoor kiezen? Welke waarden spelen mee?"></textarea>
+            </div>
+            <div class="card">
+                <h3>Argumenten tegen keuze A</h3>
+                <textarea id="tegen" placeholder="Waarom zou je hier juist niet voor kiezen?"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Stap 4 – Mijn keuze</h2>
+        <div class="card">
+            <textarea id="keuze" placeholder="Wat kies jij? Welke waarde weegt voor jou het zwaarst?"></textarea>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button onclick="deelViaEmail()">Deel via e-mail</button>
+        <button onclick="deelViaWhatsApp()">Deel via WhatsApp</button>
+        <button onclick="window.print()">Print / Opslaan als PDF</button>
+    </div>
+
+</div>
+
+<footer>
+    Onderwijsversie – Drie-Kolommenmodel
+</footer>
+
+<script>
+
+function verzamelTekst(){
+return `
+Drie-Kolommenmodel - Dilemma Analyse
+
+DILEMMA:
+${localStorage.getItem("dilemma") || ""}
+
+BETROKKENEN:
+${localStorage.getItem("betrokkenen") || ""}
+
+ARGUMENTEN VOOR:
+${localStorage.getItem("voor") || ""}
+
+ARGUMENTEN TEGEN:
+${localStorage.getItem("tegen") || ""}
+
+MIJN KEUZE:
+${localStorage.getItem("keuze") || ""}
+`;
+}
+
+function deelViaEmail(){
+const tekst = encodeURIComponent(verzamelTekst());
+window.location.href = `mailto:?subject=Dilemma Analyse&body=${tekst}`;
+}
+
+function deelViaWhatsApp(){
+const tekst = encodeURIComponent(verzamelTekst());
+window.open(`https://wa.me/?text=${tekst}`,'_blank');
+}
+
+const velden = ["dilemma","betrokkenen","voor","tegen","keuze"];
+
+velden.forEach(id=>{
+    const veld = document.getElementById(id);
+    veld.value = localStorage.getItem(id) || "";
+    veld.addEventListener("input",()=>{
+        localStorage.setItem(id, veld.value);
+    });
+});
+
+</script>
+
+</body>
+</html>
